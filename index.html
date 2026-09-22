@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTB Alcohol Label Verification Prototype</title>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>AI-Powered Alcohol Label Verification</h1>
+      <p class="subtitle">TTB Compliance Prototype — Fast visual matching for brand, ABV, warning statement & more</p>
+    </header>
+
+    <main>
+      <!-- Step 1: Upload -->
+      <section class="card" id="upload-section">
+        <h2>1. Upload Label Image(s)</h2>
+        <p class="help">Upload one or more photos of the alcohol label. Clear, well-lit images work best.</p>
+        <div class="upload-area" id="drop-zone">
+          <input type="file" id="label-images" accept="image/*" multiple>
+          <label for="label-images" class="upload-btn">Choose Images or Drag & Drop</label>
+          <div id="preview-container" class="previews"></div>
+        </div>
+      </section>
+
+      <!-- Step 2: Application Data -->
+      <section class="card" id="form-section">
+        <h2>2. Enter Application Data</h2>
+        <p class="help">Enter the values from the COLA / application form. These will be compared against the label.</p>
+        <form id="app-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="brand">Brand Name *</label>
+              <input type="text" id="brand" placeholder="e.g. OLD TOM DISTILLERY" required>
+            </div>
+            <div class="form-group">
+              <label for="class-type">Class / Type</label>
+              <input type="text" id="class-type" placeholder="e.g. Kentucky Straight Bourbon Whiskey">
+            </div>
+            <div class="form-group">
+              <label for="abv">Alcohol Content (ABV)</label>
+              <input type="text" id="abv" placeholder="e.g. 45% Alc./Vol. or 90 Proof">
+            </div>
+            <div class="form-group">
+              <label for="net-contents">Net Contents</label>
+              <input type="text" id="net-contents" placeholder="e.g. 750 mL">
+            </div>
+            <div class="form-group full-width">
+              <label for="producer">Bottler / Producer Name & Address</label>
+              <input type="text" id="producer" placeholder="Optional">
+            </div>
+            <div class="form-group full-width">
+              <label for="gov-warning">Government Warning Statement <span style="font-weight:normal;color:#718096;">(optional)</span></label>
+              <textarea id="gov-warning" rows="4" placeholder="Leave blank to use the official required text. Or paste a custom warning to force comparison against what you type."></textarea>
+              <p class="help" style="margin-top:6px;margin-bottom:0;">If left empty, the tool checks the label against the official legal wording. If you fill this in, it will compare the label to your text instead.</p>
+            </div>
+          </div>
+          <div class="form-actions" style="align-items: center;">
+            <select id="sample-select" class="sample-select">
+              <option value="">— Select a sample —</option>
+              <option value="oldtom">Old Tom Distillery (Bourbon)</option>
+              <option value="weller">W.L. Weller (Bourbon)</option>
+              <option value="jack">Jack Daniel's (Tennessee Whiskey)</option>
+              <option value="buffalo">Buffalo Trace (Bourbon)</option>
+              <option value="makers">Maker's Mark (Bourbon)</option>
+              <option value="woodford">Woodford Reserve (Bourbon)</option>
+              <option value="patron">Patrón (Tequila)</option>
+              <option value="casamigos">Casamigos (Tequila)</option>
+              <option value="donjulio">Don Julio (Tequila)</option>
+              <option value="macallan">The Macallan (Scotch)</option>
+              <option value="johnnie">Johnnie Walker (Scotch)</option>
+              <option value="glenfiddich">Glenfiddich (Scotch)</option>
+              <option value="lagavulin">Lagavulin (Scotch)</option>
+            </select>
+            <button type="button" id="load-sample" class="secondary-btn">Load Selected Sample</button>
+            <button type="submit" id="verify-btn" class="primary-btn" disabled>Verify Label(s)</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Results -->
+      <section class="card hidden" id="results-section">
+        <h2>3. Verification Results</h2>
+        <div id="status-bar" class="status-bar"></div>
+        <div id="results-content"></div>
+        <button id="reset-btn" class="secondary-btn">Start Over</button>
+      </section>
+
+      <!-- Processing indicator -->
+      <div id="processing" class="processing hidden">
+        <div class="spinner"></div>
+        <p>Analyzing label with OCR + AI matching… This usually takes 2–8 seconds.</p>
+      </div>
+    </main>
+
+    <footer>
+      <p>Prototype for Treasury / TTB Compliance Division. Not for production use.</p>
+      <p class="small">Uses client-side OCR (Tesseract.js). No images leave your browser unless you choose to deploy with a backend.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
